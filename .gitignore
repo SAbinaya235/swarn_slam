@@ -1,0 +1,26 @@
+# === .gitignore ===
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+.venv/
+*.egg-info/
+
+# Node.js
+node_modules/
+npm-debug.log
+package-lock.json
+
+# Environment files
+.env
+
+# VSCode
+.vscode/
+.DS_Store
+
+# Build / output
+dist/
+build/

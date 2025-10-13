@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Swarm Slam Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #6c5ce7;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    main {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    button {
+      background-color: #6c5ce7;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background-color: #341f97;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0 15px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .hidden { display: none; }
+    .insights {
+      background: #f1f1f1;
+      padding: 10px;
+      margin-top: 20px;
+      border-radius: 5px;
+    }
+    h3 { margin-top: 0; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Swarm Slam Demo</h1>
+</header>
+
+<main>
+  <div id="landing">
+    <button onclick="createGroup()">Create New Swarm Slam</button>
+    <button onclick="joinGroup()">Join Swarm Slam</button>
+  </div>
+
+  <div id="groupSetup" class="hidden">
+    <h3 id="groupTitle"></h3>
+    <p>Group Members: <span id="memberCount">1</span></p>
+    <div id="questionForm">
+      <h4>Answer the Questions:</h4>
+      <label>1. Describe your group in one emoji:</label>
+      <input type="text" id="q1" placeholder="😀">
+      <label>2. What word best describes your vibe?</label>
+      <input type="text" id="q2" placeholder="Fun, Chill, Creative">
+      <label>3. Your favorite inside joke:</label>
+      <textarea id="q3" rows="3"></textarea>
+      <button onclick="submitAnswers()">Submit Answers</button>
+    </div>
+  </div>
+
+  <div id="insightsSection" class="hidden">
+    <h3>Group Insights</h3>
+    <div class="insights">
+      <p id="insightEmoji">Group Emoji: 😄</p>
+      <p id="insightVibe">Group Vibe: Cheerful & Creative</p>
+      <p id="insightJoke">Most Fun Inside Joke: “<NAME> rocks!”</p>
+    </div>
+  </div>
+</main>
+
+<script>
+  let group = {
+    name: "",
+    members: 1,
+    answers: []
+  };
+
+  function createGroup() {
+    group.name = prompt("Enter Group Name:", "Farewell 2025 🎉");
+    if (!group.name) group.name = "Swarm Slam Group";
+    document.getElementById("landing").classList.add("hidden");
+    document.getElementById("groupSetup").classList.remove("hidden");
+    document.getElementById("groupTitle").innerText = group.name;
+    document.getElementById("memberCount").innerText = group.members;
+  }
+
+  function joinGroup() {
+    group.name = prompt("Enter Group Name to Join:", "Farewell 2025 🎉");
+    if (!group.name) group.name = "Swarm Slam Group";
+    group.members += 1;
+    document.getElementById("landing").classList.add("hidden");
+    document.getElementById("groupSetup").classList.remove("hidden");
+    document.getElementById("groupTitle").innerText = group.name;
+    document.getElementById("memberCount").innerText = group.members;
+  }
+
+  function submitAnswers() {
+    // Collect answers
+    let a1 = document.getElementById("q1").value || "😀";
+    let a2 = document.getElementById("q2").value || "Fun";
+    let a3 = document.getElementById("q3").value || "Hidden Joke";
+
+    // Simulate name anonymization
+    a3 = a3.replace(/\b[A-Z][a-z]+\b/g, "<NAME>");
+
+    group.answers.push({emoji: a1, vibe: a2, joke: a3});
+    
+    // Simulate swarm aggregation (simple average/fake logic for demo)
+    let emojis = group.answers.map(a => a.emoji).join(" ");
+    let vibes = [...new Set(group.answers.map(a => a.vibe))].join(", ");
+    let jokes = group.answers.map(a => a.joke).join(" | ");
+
+    document.getElementById("questionForm").classList.add("hidden");
+    document.getElementById("insightsSection").classList.remove("hidden");
+    document.getElementById("insightEmoji").innerText = "Group Emojis: " + emojis;
+    document.getElementById("insightVibe").innerText = "Group Vibe: " + vibes;
+    document.getElementById("insightJoke").innerText = "Inside Jokes: " + jokes;
+  }
+</script>
+
+</body>
+</html>
