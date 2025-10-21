@@ -21,7 +21,7 @@ Users submit short textual entries (e.g., opinions or reviews). Each node proces
 
 ## Project Structure
 
-```
+
 
 swarm-slam/
 ├── contract/
@@ -37,6 +37,7 @@ swarm-slam/
 │   └── js/main.js, analysis.js
 ├── package.json
 └── build/                      # Compiled contract ABI & deployed address
+```
 
 ````
 
