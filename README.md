@@ -1,22 +1,21 @@
-## Swarm Slam – Blockchain-based Swarm Learning Demo
-
-### Overview
-
-**Swarm Learning (SL)** is an advanced extension of **Federated Learning (FL)**.
-While *Federated Learning* allows multiple clients to collaboratively train a shared deep learning model by exchanging only gradients (and not raw data), it still depends on a **central custodian** to coordinate and aggregate updates.
-
-**Swarm Learning** removes this central dependency by introducing a **permissioned blockchain** network to:
-
-* Securely onboard participating members
-* Dynamically elect a leader among peers
-* Coordinate the learning process in a fully **decentralized** and **trustless** manner
-
-Here’s a clean `README.md` draft for your project:
+Here’s the complete, polished `README.md` for your project in full markdown:
 
 ```markdown
-# Swarm SLAM
+# Swarm Slam – Blockchain-based Swarm Learning Demo
 
-Interactive demo showcasing **Swarm Learning** integrated with Ethereum (Ganache) and privacy-preserving NLP features. Users submit short textual entries, which are processed locally to extract traits and then stored on a blockchain smart contract.
+## Overview
+
+**Swarm Learning (SL)** is an advanced extension of **Federated Learning (FL)**.  
+While *Federated Learning* allows multiple clients to collaboratively train a shared model by exchanging only updates (gradients) and not raw data, it still relies on a **central custodian** to coordinate aggregation.
+
+**Swarm Learning** removes this central dependency by using a **permissioned blockchain** to:
+
+- Securely onboard participating members
+- Dynamically elect a leader among peers
+- Coordinate the learning process in a fully **decentralized** and **trustless** manner
+
+**Swarm SLAM** demonstrates this concept in an interactive classroom-friendly way:  
+Users submit short textual entries (e.g., opinions or reviews). Each node processes the entry locally to extract **traits** (e.g., sentiment, energy) before storing a **hashed version** of the text and extracted traits on the blockchain. The system aggregates traits off-chain to form a **global swarm profile**, visualized via a frontend dashboard.
 
 ---
 
@@ -27,8 +26,8 @@ Interactive demo showcasing **Swarm Learning** integrated with Ethereum (Ganache
 swarm-slam/
 ├── contract/
 │   ├── SwarmLearning.sol       # Solidity smart contract
-│   └── compile.js              # Compilation & deployment script
-├── server.js                   # Express backend with blockchain & NLP integration
+│   └── compile.js              # Compile & deploy script
+├── server.js                   # Express backend (blockchain + NLP)
 ├── public/                     # Frontend files
 │   ├── index.html
 │   ├── create.html
@@ -47,13 +46,13 @@ swarm-slam/
 
 - Node.js >= 20.x  
 - npm  
-- Ganache (UI or CLI) running at `http://127.0.0.1:7545`
+- Ganache (UI or CLI) running at `http://127.0.0.1:7545`  
 
 ---
 
 ## Setup Instructions
 
-1. **Clone the repo**  
+1. **Clone the repository**  
 ```bash
 git clone <repo-url>
 cd swarm-slam
@@ -72,7 +71,7 @@ cd contract
 node compile.js
 ```
 
-> This deploys `SwarmLearning` to Ganache and saves ABI & address in `build/SwarmLearning.json`.
+> Deploys `SwarmLearning` to Ganache and saves ABI & address in `build/SwarmLearning.json`.
 
 4. **Run the server**
 
@@ -80,12 +79,12 @@ node compile.js
 node server.js
 ```
 
-Server will run on [http://localhost:5000](http://localhost:5000).
+Server runs at [http://localhost:5000](http://localhost:5000).
 
 5. **Test API endpoints**
 
-* `/api/test` – Check blockchain connection and available accounts.
-* `/api/swarm` – Fetch current swarm name and leader address.
+* `/api/test` – Verify blockchain connection and list available accounts
+* `/api/swarm` – Get current swarm name and leader address
 
 6. **Access the frontend**
    Open [http://localhost:5000](http://localhost:5000) in your browser.
@@ -94,17 +93,35 @@ Server will run on [http://localhost:5000](http://localhost:5000).
 
 ## Notes
 
-* Ensure Ganache is running before deploying the contract or starting the server.
-* NLP processing (e.g., sentiment or trait extraction) happens in the backend when users submit entries.
-* Contract deployments on Ganache are **transient**; redeploy if Ganache is restarted.
+* Make sure Ganache is running before deploying the contract or starting the server.
+* NLP feature extraction (e.g., sentiment or trait analysis) is handled in the backend when entries are submitted.
+* Contract deployments on Ganache are **transient**; redeploy if Ganache restarts.
 
 ---
 
 ## Contribution Guide
 
-* Frontend tasks: `public/` folder – HTML, CSS, JS for user interface.
-* Backend/API tasks: `server.js` – endpoints for swarm details, member join, entry submission, NLP processing.
-* Contract updates: `contract/SwarmLearning.sol` – any changes in storage or new functionality must be recompiled with `compile.js`.
+* **Frontend:** `public/` folder – HTML, CSS, JS
+* **Backend/API:** `server.js` – endpoints, blockchain interaction, NLP processing
+* **Smart Contract:** `contract/SwarmLearning.sol` – modify and recompile using `compile.js` if storage or functionality changes
+
+---
+
+## Example: Submitting an Entry
+
+```javascript
+POST /api/submit
+Content-Type: application/json
+
+{
+  "displayName": "Alice",
+  "text": "I think the swarm owner is very collaborative!"
+}
+```
+
+* The server extracts traits (e.g., sentiment, energy) from `text`.
+* Sends a hashed version of `text` + traits to the blockchain contract.
+* Entry is recorded immutably for swarm aggregation.
 
 ---
 
@@ -112,19 +129,11 @@ Server will run on [http://localhost:5000](http://localhost:5000).
 
 MIT License
 
-```
+---
 
-This covers **setup, structure, endpoints, notes, and contribution guidance** for teammates to get started immediately.  
+## References
 
-Do you want me to also add a **quick example of using `/api/submit` and NLP extraction flow** for clarity in the README?
-```
-
-
-### References
-
-* *Swarm Learning Whitepaper – Hewlett Packard Enterprise (HPE)*
-* *Ethereum & Web3.js Documentation*
-* *TensorFlow.js API Reference*
-* *Ganache – Local Ethereum Blockchain for Development*
-
-
+* [Swarm Learning Whitepaper – Hewlett Packard Enterprise (HPE)](https://www.hpe.com/us/en/solutions/swarm-learning.html)
+* [Ethereum & Web3.js Documentation](https://web3js.readthedocs.io/)
+* [TensorFlow.js API Reference](https://www.tensorflow.org/js)
+* [Ganache – Local Ethereum Blockchain](https://www.trufflesuite.com/ganache)
