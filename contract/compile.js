@@ -1,28 +1,24 @@
+// contract/compile.js
 const path = require("path");
 const fs = require("fs");
 const solc = require("solc");
 const Web3 = require("web3").default;
 
-// ✅ Connect to Ganache
+// Ganache RPC
 const web3 = new Web3("http://127.0.0.1:7545");
 
-// ✅ Path to Solidity file
+// Read contract
 const contractPath = path.resolve(__dirname, "SwarmLearning.sol");
 const source = fs.readFileSync(contractPath, "utf8");
 
-// ✅ Solidity compiler input with EVM compatibility for Ganache
+// Compiler input
 const input = {
   language: "Solidity",
   sources: {
-    "SwarmLearning.sol": {
-      content: source,
-    },
+    "SwarmLearning.sol": { content: source },
   },
   settings: {
-    optimizer: {
-      enabled: true,
-      runs: 200,
-    },
+    optimizer: { enabled: true, runs: 200 },
     evmVersion: "london",
     outputSelection: {
       "*": {
@@ -32,66 +28,53 @@ const input = {
   },
 };
 
-// ✅ Compile the contract
 const output = JSON.parse(solc.compile(JSON.stringify(input)));
 
-// Handle compiler errors clearly
+// print compile warnings/errors
 if (output.errors) {
-  for (const err of output.errors) {
-    console.log(
-      err.formattedMessage.includes("warning")
-        ? "⚠️  " + err.formattedMessage
-        : "❌  " + err.formattedMessage
-    );
-  }
+  output.errors.forEach((err) => {
+    const severity = err.severity || "";
+    if (severity === "warning") {
+      console.warn("⚠️  " + err.formattedMessage);
+    } else {
+      console.error("❌  " + err.formattedMessage);
+    }
+  });
 }
 
-// ✅ Extract ABI and Bytecode
-const contract = output.contracts["SwarmLearning.sol"]["SwarmLearning"];
-const bytecode = contract.evm.bytecode.object;
-const abi = contract.abi;
+// Extract contract
+const contractName = "SwarmLearning";
+const contractData = output.contracts["SwarmLearning.sol"][contractName];
+if (!contractData) {
+  console.error("Contract not found in compilation output.");
+  process.exit(1);
+}
+const abi = contractData.abi;
+const bytecode = contractData.evm.bytecode.object;
 
-console.log("Bytecode length:", bytecode.length);
-
-// ✅ Async deployment process
 (async () => {
   try {
     const accounts = await web3.eth.getAccounts();
     const deployer = accounts[0];
-
     console.log("Deploying from account:", deployer);
-
-    const swarmName = "TestSwarm";
+    console.log("Bytecode length:", bytecode.length);
 
     const contractInstance = await new web3.eth.Contract(abi)
-      .deploy({ data: "0x" + bytecode, arguments: [swarmName] })
-      .send({ from: deployer, gas: 3000000 });
+      .deploy({ data: "0x" + bytecode, arguments: ["TestSwarm"] })
+      .send({ from: deployer, gas: 3000000, gasPrice: await web3.eth.getGasPrice() });
 
-    console.log("\n✅ Contract successfully deployed!");
-    console.log("📜 Contract Address:", contractInstance.options.address);
+    console.log("\n✅ Contract deployed at:", contractInstance.options.address);
 
-    // ✅ Check a sample function
-    const details = await contractInstance.methods.getSwarmDetails().call();
-    console.log("\nSwarm Details:");
-    console.log("Name:", details[0]);
-    console.log("Leader:", details[1]);
-
-    // ✅ Save ABI and address for future use
+    // Save ABI + address
     const buildPath = path.resolve(__dirname, "../build");
     if (!fs.existsSync(buildPath)) fs.mkdirSync(buildPath);
 
     fs.writeFileSync(
       path.resolve(buildPath, "SwarmLearning.json"),
-      JSON.stringify(
-        { abi, address: contractInstance.options.address },
-        null,
-        2
-      )
+      JSON.stringify({ abi, address: contractInstance.options.address }, null, 2)
     );
-
-    console.log("\nABI and address saved to build/SwarmLearning.json ✅");
-  } catch (error) {
-    console.error("\n❌ Deployment failed!");
-    console.error(error);
+    console.log("ABI and address saved to build/SwarmLearning.json ✅");
+  } catch (err) {
+    console.error("\n❌ Deployment failed:", err);
   }
 })();
