@@ -11,57 +11,114 @@ While *Federated Learning* allows multiple clients to collaboratively train a sh
 * Dynamically elect a leader among peers
 * Coordinate the learning process in a fully **decentralized** and **trustless** manner
 
-### Implementation Summary
+Here’s a clean `README.md` draft for your project:
 
-#### Environment Setup
+```markdown
+# Swarm SLAM
 
-* **Operating System:** Windows
-* **Tools Installed:**
+Interactive demo showcasing **Swarm Learning** integrated with Ethereum (Ganache) and privacy-preserving NLP features. Users submit short textual entries, which are processed locally to extract traits and then stored on a blockchain smart contract.
 
-  * **Node.js & npm** – for backend and dependency management
-  * **Ganache** – local Ethereum blockchain (for testing smart contracts)
-  * **Visual Studio Code** – development environment
+---
 
-#### 2Dependencies Installed
+## Project Structure
 
-```bash
-npm init -y
-npm install express cors body-parser @tensorflow/tfjs web3 crypto-js chart.js wordcloud framer-motion tailwindcss
 ```
 
-#### Blockchain Setup
+swarm-slam/
+├── contract/
+│   ├── SwarmLearning.sol       # Solidity smart contract
+│   └── compile.js              # Compilation & deployment script
+├── server.js                   # Express backend with blockchain & NLP integration
+├── public/                     # Frontend files
+│   ├── index.html
+│   ├── create.html
+│   ├── join.html
+│   ├── analysis.html
+│   ├── css/styles.css
+│   └── js/main.js, analysis.js
+├── package.json
+└── build/                      # Compiled contract ABI & deployed address
 
-* Installed **Ganache** → [Download Link](https://archive.trufflesuite.com/ganache/)
-* Chose **Quickstart** option
-* Copied the **RPC URL** (e.g., `http://127.0.0.1:7545`) for connection testing
-
-#### Project Initialization
-
-* Created a **test folder** in VS Code to verify Ganache and Web3 connectivity
-* Verified connection with:
-
-  * Connected accounts printed
-  * Block number and network ID confirmed
-* Created the actual project structure with:
-
-  * `backend/` – Express.js server and blockchain logic
-  * `frontend/` – UI (HTML, TailwindCSS, and Chart.js visualizations)
-
-#### Repository
-
-Project hosted on GitHub:
-🔗 [Swarm Slam Repository](https://github.com/SAbinaya235/swarn_slam.git)
+````
 
 ---
 
-### Next Steps
+## Prerequisites
 
-* Add **smart contracts** for Swarm creation and participation
-* Implement **TensorFlow.js** based analysis (sentiment / response trends)
-* Develop the **frontend interface** for creating & joining Swarms
-* Integrate blockchain event logging and visualization
+- Node.js >= 20.x  
+- npm  
+- Ganache (UI or CLI) running at `http://127.0.0.1:7545`
 
 ---
+
+## Setup Instructions
+
+1. **Clone the repo**  
+```bash
+git clone <repo-url>
+cd swarm-slam
+````
+
+2. **Install dependencies**
+
+```bash
+npm install
+```
+
+3. **Deploy the smart contract**
+
+```bash
+cd contract
+node compile.js
+```
+
+> This deploys `SwarmLearning` to Ganache and saves ABI & address in `build/SwarmLearning.json`.
+
+4. **Run the server**
+
+```bash
+node server.js
+```
+
+Server will run on [http://localhost:5000](http://localhost:5000).
+
+5. **Test API endpoints**
+
+* `/api/test` – Check blockchain connection and available accounts.
+* `/api/swarm` – Fetch current swarm name and leader address.
+
+6. **Access the frontend**
+   Open [http://localhost:5000](http://localhost:5000) in your browser.
+
+---
+
+## Notes
+
+* Ensure Ganache is running before deploying the contract or starting the server.
+* NLP processing (e.g., sentiment or trait extraction) happens in the backend when users submit entries.
+* Contract deployments on Ganache are **transient**; redeploy if Ganache is restarted.
+
+---
+
+## Contribution Guide
+
+* Frontend tasks: `public/` folder – HTML, CSS, JS for user interface.
+* Backend/API tasks: `server.js` – endpoints for swarm details, member join, entry submission, NLP processing.
+* Contract updates: `contract/SwarmLearning.sol` – any changes in storage or new functionality must be recompiled with `compile.js`.
+
+---
+
+## License
+
+MIT License
+
+```
+
+This covers **setup, structure, endpoints, notes, and contribution guidance** for teammates to get started immediately.  
+
+Do you want me to also add a **quick example of using `/api/submit` and NLP extraction flow** for clarity in the README?
+```
+
 
 ### References
 
